@@ -43,3 +43,4 @@ Resources:
           Type: SQS
           Properties:
             Queue: !GetAtt SqsNotifcationQueue.Arn 
+            BatchSize: 1
