@@ -16,10 +16,21 @@ Parameters:
 #     AutoPublishAlias: live
 #     DeploymentPreference:
 #       Enabled: true
-#       Type: Canary10Percent5Minutes
+#       Type: Canary10Percent5Minutes 
 
 Resources:
-  GetHelloWorld:
+  SqsNotificationDeadLetterQueue:
+    Type: AWS::SQS::Queue
+
+  SqsNotifcationQueue:
+    Type: AWS::SQS::Queue
+    Properties:
+      VisibilityTimeout: 20
+      RedrivePolicy:
+        deadLetterTargetArn: !GetAtt SqsNotificationDeadLetterQueue.Arn
+        maxReceiveCount: 2
+
+  NotificationEmail:
     Type: AWS::Serverless::Function
     Properties:
       Handler: main
@@ -28,8 +39,7 @@ Resources:
         Fn::ImportValue:
           !Join ['-', [!Ref 'ProjectId', !Ref 'AWS::Region', 'LambdaTrustRole']]
       Events:
-        GetEvent:
-          Type: Api
+        SqsEvent:
+          Type: SQS
           Properties:
-            Path: /
-            Method: get
+            Queue: !GetAtt SqsNotifcationQueue.Arn 
