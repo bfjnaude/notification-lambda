@@ -21,10 +21,13 @@ Parameters:
 Resources:
   SqsNotificationDeadLetterQueue:
     Type: AWS::SQS::Queue
+    Properties: 
+      QueueName: SqsNotificationDeadLetterQueue
 
   SqsNotifcationQueue:
     Type: AWS::SQS::Queue
     Properties:
+      QueueName: SqsNotifcationQueue
       VisibilityTimeout: 20
       RedrivePolicy:
         deadLetterTargetArn: !GetAtt SqsNotificationDeadLetterQueue.Arn
