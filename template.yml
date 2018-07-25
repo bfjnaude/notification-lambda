@@ -33,19 +33,38 @@ Resources:
         deadLetterTargetArn: !GetAtt SqsNotificationDeadLetterQueue.Arn
         maxReceiveCount: 2
 
+  NotificationLambdaExecutionRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument: 
+        Version: "2012-10-17"
+        Statement:
+          -
+            Effect: "Allow"
+            Principal:
+              Service:
+              - "lambda.amazonaws.com"
+            Action:
+              - "sts:AssumeRole"
+      ManagedPolicyArns:
+        -
+          arn:aws:iam:policy/AmazonSQSFullAccess
+          arn:aws:iam:policy/AmazonSESFullAccess
+          arn:aws:iam:policy/AmazonLambdaBasicExecutionRole
+          arn:aws:iam:policy/AWSConfigRulesExecutionRole 
+
+      RoleName: notification-lambda-execution-role 
+
   NotificationEmail:
     Type: AWS::Serverless::Function
     Properties:
       FunctionName: notification-email
       Handler: main
       Runtime: go1.x
-      Role:
-        Fn::ImportValue:
-          !Join ['-', [!Ref 'ProjectId', !Ref 'AWS::Region', 'LambdaTrustRole']]
+      Role: !GetAtt NotificationLambdaExecutionRole.Arn
       Events:
         SqsEvent:
           Type: SQS
           Properties:
             Queue: !GetAtt SqsNotifcationQueue.Arn 
-            BatchSize: 1
-
+            BatchSize: 1 
