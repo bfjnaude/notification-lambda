@@ -18,7 +18,7 @@ Parameters:
 #       Enabled: true
 #       Type: Canary10Percent5Minutes 
 
-Resources:
+Resources: 
   SqsNotificationDeadLetterQueue:
     Type: AWS::SQS::Queue
     Properties: 
@@ -36,6 +36,7 @@ Resources:
   NotificationEmail:
     Type: AWS::Serverless::Function
     Properties:
+      FunctionName: notification-email
       Handler: main
       Runtime: go1.x
       Role:
@@ -47,3 +48,4 @@ Resources:
           Properties:
             Queue: !GetAtt SqsNotifcationQueue.Arn 
             BatchSize: 1
+
