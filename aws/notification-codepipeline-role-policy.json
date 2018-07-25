@@ -1,0 +1,51 @@
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Action": [
+                "s3:GetObject",
+                "s3:GetObjectVersion",
+                "s3:GetBucketVersioning",
+                "s3:PutObject"
+            ],
+            "Resource": [
+                "arn:aws:s3:::aws-eu-west-1-502935755217-notification-codepipeline",
+                "arn:aws:s3:::aws-eu-west-1-502935755217-notification-codepipeline/*"
+            ],
+            "Effect": "Allow"
+        },
+        {
+            "Action": [
+                "codebuild:StartBuild",
+                "codebuild:BatchGetBuilds",
+                "codebuild:StopBuild"
+            ],
+            "Resource": [
+                "arn:aws:codebuild:eu-west-1:502935755217:project/notification"
+            ],
+            "Effect": "Allow"
+        },
+        {
+            "Action": [
+                "cloudformation:DescribeStacks",
+                "cloudformation:DescribeChangeSet",
+                "cloudformation:CreateChangeSet",
+                "cloudformation:DeleteChangeSet",
+                "cloudformation:ExecuteChangeSet"
+            ],
+            "Resource": [
+                "arn:aws:cloudformation:eu-west-1:502935755217:stack/notification/*"
+            ],
+            "Effect": "Allow"
+        },
+        {
+            "Action": [
+                "iam:PassRole"
+            ],
+            "Resource": [
+                "arn:aws:iam::502935755217:role/notification-cloudFormation"
+            ],
+            "Effect": "Allow"
+        }
+    ]
+} 

@@ -1,0 +1,115 @@
+{
+    "pipeline": {
+        "name": "notification-Pipeline",
+        "roleArn": "arn:aws:iam::502935755217:role/notification-codepipeline",
+        "artifactStore": {
+            "type": "S3",
+            "location": "aws-eu-west-1-502935755217-notification-codepipeline"
+        },
+        "stages": [
+            {
+                "name": "Source",
+                "actions": [
+                    {
+                        "name": "ApplicationSource",
+                        "actionTypeId": {
+                            "category": "Source",
+                            "owner": "ThirdParty",
+                            "provider": "GitHub",
+                            "version": "1"
+                        },
+                        "runOrder": 1,
+                        "configuration": {
+                            "Branch": "master",
+                            "OAuthToken": "****",
+                            "Owner": "uafrica",
+                            "Repo": "ls-notification-serverless"
+                        },
+                        "outputArtifacts": [
+                            {
+                                "name": "notification-SourceArtifact"
+                            }
+                        ],
+                        "inputArtifacts": []
+                    }
+                ]
+            },
+            {
+                "name": "Build",
+                "actions": [
+                    {
+                        "name": "PackageExport",
+                        "actionTypeId": {
+                            "category": "Build",
+                            "owner": "AWS",
+                            "provider": "CodeBuild",
+                            "version": "1"
+                        },
+                        "runOrder": 1,
+                        "configuration": {
+                            "ProjectName": "notification"
+                        },
+                        "outputArtifacts": [
+                            {
+                                "name": "notification-BuildArtifact"
+                            }
+                        ],
+                        "inputArtifacts": [
+                            {
+                                "name": "notification-SourceArtifact"
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "name": "Deploy",
+                "actions": [
+                    {
+                        "name": "GenerateChangeSet",
+                        "actionTypeId": {
+                            "category": "Deploy",
+                            "owner": "AWS",
+                            "provider": "CloudFormation",
+                            "version": "1"
+                        },
+                        "runOrder": 1,
+                        "configuration": {
+                            "ActionMode": "CHANGE_SET_REPLACE",
+                            "Capabilities": "CAPABILITY_IAM",
+                            "ChangeSetName": "pipeline-changeset",
+                            "ParameterOverrides": "{\"ProjectId\":\"notification\"}",
+                            "RoleArn": "arn:aws:iam::502935755217:role/notification-cloudformation",
+                            "StackName": "notification",
+                            "TemplatePath": "notification-BuildArtifact::template-export.yml"
+                        },
+                        "outputArtifacts": [],
+                        "inputArtifacts": [
+                            {
+                                "name": "notification-BuildArtifact"
+                            }
+                        ]
+                    },
+                    {
+                        "name": "ExecuteChangeSet",
+                        "actionTypeId": {
+                            "category": "Deploy",
+                            "owner": "AWS",
+                            "provider": "CloudFormation",
+                            "version": "1"
+                        },
+                        "runOrder": 2,
+                        "configuration": {
+                            "ActionMode": "CHANGE_SET_EXECUTE",
+                            "ChangeSetName": "pipeline-changeset",
+                            "StackName": "notification"
+                        },
+                        "outputArtifacts": [],
+                        "inputArtifacts": []
+                    }
+                ]
+            }
+        ],
+        "version": 1
+    }
+}

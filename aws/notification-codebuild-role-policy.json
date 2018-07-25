@@ -1,0 +1,49 @@
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Action": [
+                "logs:CreateLogGroup",
+                "logs:CreateLogStream",
+                "logs:PutLogEvents"
+            ],
+            "Resource": "*",
+            "Effect": "Allow"
+        },
+        {
+            "Action": [
+                "s3:PutObject",
+                "s3:GetObject",
+                "s3:GetObjectVersion"
+            ],
+            "Resource": [
+                "arn:aws:s3:::aws-eu-west-1-502935755217-notification-codepipeline",
+                "arn:aws:s3:::aws-eu-west-1-502935755217-notification-codepipeline/*"
+            ],
+            "Effect": "Allow"
+        },
+        {
+            "Action": [
+                "s3:PutObject*",
+                "s3:GetObject",
+                "s3:GetObjectVersion"
+            ],
+            "Resource": [
+                "arn:aws:s3:::aws-eu-west-1-502935755217-notification-app",
+                "arn:aws:s3:::aws-eu-west-1-502935755217-notification-app/*"
+            ],
+            "Effect": "Allow"
+        },
+        {
+            "Action": [
+                "kms:GenerateDataKey*",
+                "kms:Encrypt",
+                "kms:Decrypt"
+            ],
+            "Resource": [
+                "arn:aws:kms:eu-west-1:502935755217:alias/aws/s3"
+            ],
+            "Effect": "Allow"
+        }
+    ]
+}
