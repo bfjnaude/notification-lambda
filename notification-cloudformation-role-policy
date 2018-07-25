@@ -1,0 +1,86 @@
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Sid": "VisualEditor0",
+            "Effect": "Allow",
+            "Action": [
+                "s3:PutObject",
+                "s3:GetObject",
+                "iam:PassRole",
+                "iam:GetRole",
+                "cloudformation:CreateChangeSet",
+                "s3:GetObjectVersion"
+            ],
+            "Resource": [
+                "arn:aws:iam::502935755217:role/CodeStarWorker-notification-la-Lambda",
+                "arn:aws:iam::502935755217:role/notification-lambda-execution-role",
+                "arn:aws:s3:::aws-codestar-eu-west-1-502935755217-notification-la-pipe",
+                "arn:aws:s3:::aws-codestar-eu-west-1-502935755217-notification-la-pipe/*",
+                "arn:aws:cloudformation:eu-west-1:aws:transform/Serverless-2016-10-31",
+                "arn:aws:cloudformation:eu-west-1:aws:transform/CodeStar"
+            ]
+        },
+        {
+            "Sid" : "Edit0",
+            "Effect": "Allow",
+            "Action": [
+                "iam:CreateRole",
+                "iam:DeleteRole",
+                "iam:AttachRolePolicy",
+                "iam:DetachRolePolicy"
+            ],
+            "Resource": [
+                "arn:aws:iam::502935755217:role/notification-lambda-execution-role"
+            ] 
+        },
+        {
+            "Sid": "VisualEditor1",
+            "Effect": "Allow",
+            "Action": [
+                "lambda:CreateFunction",
+                "lambda:TagResource",
+                "sns:DeleteTopic",
+                "s3:CreateBucket",
+                "sns:ListTopics",
+                "lambda:GetFunctionConfiguration",
+                "sns:SetTopicAttributes",
+                "lambda:CreateEventSourceMapping",
+                "dynamodb:DeleteTable",
+                "lambda:UntagResource",
+                "lambda:ListTags",
+                "dynamodb:DescribeTable",
+                "config:DescribeConfigRules",
+                "lambda:DeleteFunction",
+                "s3:DeleteBucket",
+                "config:DeleteConfigRule",
+                "sqs:ListQueues",
+                "lambda:UpdateEventSourceMapping",
+                "sns:GetTopicAttributes",
+                "apigateway:*",
+                "lambda:GetEventSourceMapping",
+                "lambda:GetFunction",
+                "config:PutConfigRule",
+                "lambda:UpdateFunctionConfiguration",
+                "sns:CreateTopic",
+                "kinesis:CreateStream",
+                "kinesis:DescribeStream",
+                "dynamodb:CreateTable",
+                "lambda:UpdateFunctionCode",
+                "lambda:AddPermission",
+                "lambda:UpdateFunction",
+                "kinesis:DeleteStream",
+                "lambda:DeleteEventSourceMapping",
+                "lambda:RemovePermission",
+                "codestar:SyncResources"
+            ],
+            "Resource": "*"
+        },
+        {
+            "Sid": "VisualEditor2",
+            "Effect": "Allow",
+            "Action": "sqs:*",
+            "Resource": "arn:aws:sqs:*:*:*"
+        }
+    ]
+} 
